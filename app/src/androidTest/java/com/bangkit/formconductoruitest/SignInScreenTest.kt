@@ -9,6 +9,7 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performImeAction
 import androidx.compose.ui.test.performTextInput
+import androidx.compose.ui.test.performTextReplacement
 import org.junit.Rule
 import org.junit.Test
 
@@ -32,6 +33,27 @@ internal class SignInScreenTest {
 
         rule.onNodeWithTag("PasswordField").assertIsFocused()
         rule.onNodeWithTag("PasswordField").performTextInput("password")
+        rule.onNodeWithTag("PasswordField").performImeAction()
+
+        rule.onNodeWithTag("SignInButton").assertIsEnabled()
+    }
+
+    @Test
+    fun this_is_weird() {
+        rule.setContent { SignInScreen() }
+
+        rule.onNodeWithTag("SignInButton").assertIsNotEnabled()
+
+        rule.onNodeWithTag("EmailField").assertIsNotFocused()
+        rule.onNodeWithTag("EmailField").performClick()
+        rule.onNodeWithTag("EmailField").performTextInput("test@gmail.com")
+        rule.onNodeWithTag("EmailField").performImeAction()
+
+        rule.onNodeWithTag("SignInButton").assertIsNotEnabled()
+
+        rule.onNodeWithTag("PasswordField").assertIsFocused()
+        rule.onNodeWithTag("PasswordField").performTextInput("password")
+        rule.onNodeWithTag("PasswordField").performTextReplacement("") // empty string
         rule.onNodeWithTag("PasswordField").performImeAction()
 
         rule.onNodeWithTag("SignInButton").assertIsEnabled()
